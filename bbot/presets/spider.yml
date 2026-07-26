@@ -2,6 +2,7 @@ description: Recursive web spider
 
 modules:
   - http
+  - web
 
 blacklist:
   # Prevent spider from invalidating sessions by logging out

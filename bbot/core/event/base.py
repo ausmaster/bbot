@@ -1746,7 +1746,12 @@ class HTTP_RESPONSE(URL_UNVERIFIED):
         return body_bytes.decode("utf-8", errors="replace")
 
     def _data_id(self):
-        return self.data["method"] + "|" + self.data["url"]
+        # `source` discriminates otherwise-identical responses fetched by different
+        # modules (e.g. http's raw fetch vs web's rendered one), so they don't dedupe
+        # against each other.
+        source = self.data.get("source")
+        prefix = f"{source}|" if source else ""
+        return f"{prefix}{self.data['method']}|{self.data['url']}"
 
     def sanitize_data(self, data):
         url = data.get("url", "")
